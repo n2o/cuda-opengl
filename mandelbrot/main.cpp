@@ -35,29 +35,25 @@ void initGL(void) {
     checkCudaErrors(cudaGraphicsGLRegisterBuffer(&cuda_pbo_resource, pbo_buffer, cudaGraphicsMapFlagsWriteDiscard));
 }
 
-/**
- * Draw in window
- */
-void displayForGlut(void) {
-    // Clears the pixels
-    glClear(GL_COLOR_BUFFER_BIT);
+void display(void) {
+    uchar4 *devimg = NULL;
 
-    // Draw a square with specified color and the 4 points
-    glColor3f(0, 0, 255);
-    glBegin(GL_QUADS);
-    glVertex3f(0.10, 0.10, 0.0);
-    glVertex3f(0.9, 0.10, 0.0);
-    glVertex3f(0.9, 0.9, 0.0);
-    glVertex3f(0.10, 0.9, 0.0);
-    glEnd();
+    size_t num_bytes;
 
-    // Draws one point
-    glColor3f(0, 255, 0);
-    glBegin(GL_POINTS);
-    glVertex3f(0.50, 0.30, 0.0);
-    glEnd();
+    checkCudaErrors(cudaGraphicsMapResources(1, &cuda_pbo_resource, NULL));
+    checkCudaErrors(cudaGraphicsResourceGetMappedPointer((void **)&devimg, &num_bytes, cuda_pbo_resource));
 
-    glFlush();
+    if(num_bytes != windowSize.x*windowSize.y*sizeof(uchar4)) {
+        printf("WRONG SIZE!!!\n");
+        exit(-1);
+    }
+
+    render(devimg, range, 255);
+
+    checkCudaErrors(cudaGraphicsUnmapResources(1, &cuda_pbo_resource, NULL));
+
+    glDrawPixels(windowSize.x, windowSize.y, GL_RGBA, GL_UNSIGNED_BYTE, 0);
+    glutSwapBuffers();
 }
 
 /**
@@ -77,11 +73,13 @@ int initGlutDisplay(int argc, char* argv[]) {
     glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 
     glewInit();
+    initGL();
 
     calcGrid(windowSize);
     range.set(-2.0, -1.0, 2.0, 1.0, windowSize);
 
-    glutDisplayFunc(displayForGlut);
+    glutDisplayFunc(display);
+    glutIdleFunc(display);
     glutMainLoop();
 
     return 0;
