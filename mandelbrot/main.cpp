@@ -63,7 +63,7 @@ void destroyGL(void) {
 }
 
 void keyboard(unsigned char key, int /*x*/, int /*y*/) {
-    float stepsize = 0.05;
+    float stepsize = 0.005;
     switch (key) {
         case 27:
         case 'q':
@@ -71,25 +71,28 @@ void keyboard(unsigned char key, int /*x*/, int /*y*/) {
             destroyGL();
             glutDestroyWindow(glutGetWindow());
             break;
-        case 'd':
+        case 'd':   // move left
             range.xmin += stepsize;
             break;
-        case 'a':
+        case 'a':   // move right
             range.xmin -= stepsize;
             break;
-        case 'w':
+        case 'w':   // move up
             range.ymin += stepsize;
             break;
-        case 's':
+        case 's':   // move down
             range.ymin -= stepsize;
             break;
-        case '+':
+        case '+':   // zoom in
             range.xstep *= 0.99;
             range.ystep *= 0.99;
             break;
-        case '-':
+        case '-':   // zoom out
             range.xstep *= 1.01;
             range.ystep *= 1.01;
+            break;
+        case 'r':   // reset
+            range.set(-2.0, -1.0, 2.0, 1.0, windowSize);
             break;
         default:
             break;

@@ -10,3 +10,4 @@ Create graphical interface with OpenGL and compute the Mandelbrot set with CUDA.
 * s: move down
 * +: zoom in
 * -: zoom out
+* r: reset
