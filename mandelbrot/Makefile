@@ -28,7 +28,8 @@ ALL_CCFLAGS :=
 ALL_CCFLAGS += $(NVCCFLAGS)
 ALL_CCFLAGS += $(addprefix -Xcompiler ,$(COMMONFLAGS))
 
-OBJS = main.o
+OBJS = mandel_GPU.o \
+	main.o
 
 # Build rules
 .DEFAULT: all
@@ -49,5 +50,5 @@ all: $(OBJS)
 clean:
 	rm $(OBJS) $(NAME)
 
-#mandel_GPU.o: mandel_GPU.cuh complexRange.h
-#main.o: gettime.h complexRange.h mandel_GPU.cuh
+mandel_GPU.o: mandel_GPU.cuh complexRange.h
+main.o: complexRange.h mandel_GPU.cuh
