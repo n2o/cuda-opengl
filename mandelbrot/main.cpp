@@ -16,7 +16,7 @@
 
 CRange range;
 
-dim3 windowSize(1024,512);
+dim3 windowSize(1536,769);
 
 static GLuint pbo_buffer = 0;
 struct cudaGraphicsResource *cuda_pbo_resource;
@@ -37,7 +37,6 @@ void initGL(void) {
 
 void display(void) {
     uchar4 *devimg = NULL;
-
     size_t num_bytes;
 
     checkCudaErrors(cudaGraphicsMapResources(1, &cuda_pbo_resource, NULL));
@@ -64,6 +63,7 @@ void destroyGL(void) {
 }
 
 void keyboard(unsigned char key, int /*x*/, int /*y*/) {
+    float stepsize = 0.05;
     switch (key) {
         case 27:
         case 'q':
@@ -71,8 +71,28 @@ void keyboard(unsigned char key, int /*x*/, int /*y*/) {
             destroyGL();
             glutDestroyWindow(glutGetWindow());
             break;
+        case 'd':
+            range.xmin += stepsize;
+            break;
+        case 'a':
+            range.xmin -= stepsize;
+            break;
+        case 'w':
+            range.ymin += stepsize;
+            break;
+        case 's':
+            range.ymin -= stepsize;
+            break;
+        case '+':
+            range.xstep *= 0.99;
+            range.ystep *= 0.99;
+            break;
+        case '-':
+            range.xstep *= 1.01;
+            range.ystep *= 1.01;
+            break;
         default:
-        break;
+            break;
     }
 }
 
