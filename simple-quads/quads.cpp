@@ -41,6 +41,7 @@ int initGlutDisplay(int argc, char* argv[]) {
 
     return 0;
 }
+
 int main(int argc, char* argv[]) {
     initGlutDisplay(argc, argv);
 
