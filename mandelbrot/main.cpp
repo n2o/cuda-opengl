@@ -56,6 +56,26 @@ void display(void) {
     glutSwapBuffers();
 }
 
+void destroyGL(void) {
+    checkCudaErrors(cudaGraphicsUnregisterResource(cuda_pbo_resource));
+
+    glDeleteBuffers(1, &pbo_buffer);
+    glBindBuffer(GL_PIXEL_UNPACK_BUFFER_ARB, 0);
+}
+
+void keyboard(unsigned char key, int /*x*/, int /*y*/) {
+    switch (key) {
+        case 27:
+        case 'q':
+        case 'Q':
+            destroyGL();
+            glutDestroyWindow(glutGetWindow());
+            break;
+        default:
+        break;
+    }
+}
+
 /**
  * Initialize window
  */
@@ -82,8 +102,13 @@ int initGlutDisplay(int argc, char* argv[]) {
     calcGrid(windowSize);
     range.set(-2.0, -1.0, 2.0, 1.0, windowSize);
 
+    // Initial drawing
     glutDisplayFunc(display);
+    // Refresh image
     glutIdleFunc(display);
+    // Set keyboard bindings
+    glutKeyboardFunc(keyboard);
+
     glutMainLoop();
 
     return 0;
