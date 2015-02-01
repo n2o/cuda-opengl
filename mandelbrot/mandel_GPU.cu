@@ -53,26 +53,6 @@ __global__ void mandel_gpu(uchar4* img, CRange range, unsigned int MaxIter) {
     }
 }
 
-
-//o~--------------------------------------------------------------------~o//
-__global__ void simpleframe(uchar4* img, CRange range) {
-//o~--------------------------------------------------------------------~o//
-    unsigned int x = threadIdx.x + blockIdx.x*blockDim.x;
-    unsigned int y = threadIdx.y + blockIdx.y*blockDim.y;
-
-    unsigned int i = x + y*blockDim.y*gridDim.x;
-
-    img[i].x = 0;
-    img[i].y = 0;
-    img[i].z = 0;
-    img[i].w = 255;
-
-    if(x == 0 || x == range.window.x-1 || y == 0 || y == range.window.y-1) {
-        img[i].x = 255;
-    }
-}
-
-
 //o~--------------------------------------------------------------------~o//
 void calcGrid(dim3 windowSize) {
 //o~--------------------------------------------------------------------~o//

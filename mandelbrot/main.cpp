@@ -72,9 +72,13 @@ int initGlutDisplay(int argc, char* argv[]) {
     glLoadIdentity();
     glOrtho(0.0, 1.0, 0.0, 1.0, -1.0, 1.0);
 
+    // Initialize memory for the image
     glewInit();
+
+    // Link OpenGL and CUDA
     initGL();
 
+    // Calculate Grid Size
     calcGrid(windowSize);
     range.set(-2.0, -1.0, 2.0, 1.0, windowSize);
 
